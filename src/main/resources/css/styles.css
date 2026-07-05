@@ -1,0 +1,13 @@
+/* Global styles for NoteFX */
+root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 12pt;
+}
+
+TextArea {
+    -fx-font-size: 11pt;
+}
+
+.toolbar-label {
+    -fx-font-weight: bold;
+}

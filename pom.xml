@@ -15,10 +15,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven.compiler.source>26</maven.compiler.source>
-        <maven.compiler.target>26</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
 
-        <javafx.version>26.0.1</javafx.version>
+        <javafx.version>25.0.3</javafx.version>
         <sqlite.version>3.50.3.0</sqlite.version>
         <flexmark.version>0.64.8</flexmark.version>
     </properties>
@@ -26,22 +26,26 @@
     <dependencies>
 
         <!-- JavaFX -->
+        <!-- JavaFX: add platform classifier for native libraries (Windows) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
+            <classifier>win</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
+            <classifier>win</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
             <version>${javafx.version}</version>
+            <classifier>win</classifier>
         </dependency>
 
         <!-- SQLite -->
@@ -76,7 +80,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
                 <configuration>
-                    <release>26</release>
+                    <release>25</release>
                 </configuration>
             </plugin>
 
@@ -85,7 +89,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.notefx.Main</mainClass>
+                    <mainClass>com.notefx.app.Main</mainClass>
                 </configuration>
             </plugin>
 

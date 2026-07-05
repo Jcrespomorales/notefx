@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.notefx.controllers.MainController">
+    <top>
+        <ToolBar>
+            <Label text="NoteFX" />
+        </ToolBar>
+    </top>
+    <center>
+        <TextArea fx:id="noteArea" promptText="Escribe tus notas aquí..." />
+    </center>
+</BorderPane>
