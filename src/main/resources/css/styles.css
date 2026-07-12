@@ -1,13 +1,82 @@
 /* Global styles for NoteFX */
-root {
+.root {
     -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     -fx-font-size: 12pt;
+    /* Fondo global de la aplicación */
+    -fx-background-color: red;
+
+/* ========= PALETA ========= */
+    /* Fondos */
+    -app-bg: #1E1F22;
+    -app-surface: #2B2D31;
+    -app-card: #313338;
+    -app-hover: #3A3D42;
+
+    /* Bordes */
+    -app-border: #44474F;
+
+    /* Texto */
+    -app-text-primary: #FFFFFF;
+    -app-text-secondary: #B5BAC1;
+    -app-text-placeholder: #8E9297;
+
+    /* Acentos */
+    -app-primary: #4F8CFF;
+    -app-primary-hover: #6CA0FF;
+
+    /* Estados */
+    -app-success: #43B581;
+    -app-warning: #FAA61A;
+    -app-error: #ED4245;
 }
+
+
+.titulo-principal {
+
+}
+
+
+.btn{
+	-fx-background-color: yellow;
+    -fx-max-width: Infinity;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+ 
+    
+   
+}
+
+/*==== PARTE IZQUIERDA ==== */
+.left-box{
+    -fx-alignment: center;
+    -fx-padding: 4px;
+}
+
+
+/*==== PARTE CENTRAL ==== */
+.center-box-left{
+		-fx-background-color: blue;	
+}
+
 
 TextArea {
     -fx-font-size: 11pt;
 }
 
-.toolbar-label {
-    -fx-font-weight: bold;
+.center-box-right{
+		-fx-background-color: green;
+		
 }
+
+
+
+/*==== PARTE DERECHA ==== */
+.right-box{
+		-fx-background-color: red;
+
+		
+
+	
+	
+}
+
