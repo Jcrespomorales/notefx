@@ -3,6 +3,7 @@ module notefx {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires java.sql;
 
     // If you later use other JVM libraries that are modular, add them here (e.g. requires com.vladsch.flexmark;)
 

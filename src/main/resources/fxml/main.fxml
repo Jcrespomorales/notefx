@@ -10,7 +10,7 @@
 <BorderPane 
 xmlns="http://javafx.com/javafx/17" 
 xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="com.notefx.controllers.MainController"
+fx:controller="com.notefx.controllers.MainController" 
 >
     <top>
         <ToolBar>
