@@ -24,10 +24,10 @@ fx:controller="com.notefx.controllers.MainController"
 	        <ListView fx:id="notesList" VBox.vgrow="ALWAYS" />
 	
 	        <!-- Botones -->
-	        <Button text="Nueva"  styleClass="btn"/>
-	        <Button text="Guardar"  styleClass="btn"/>
-	        <Button text="Editar" styleClass="btn" />
-	        <Button text="Eliminar" styleClass="btn"/>
+			<Button fx:id="btnNuevo" text="Nueva" onAction="#onNuevaNota" styleClass="btn"/>
+            <Button fx:id= "btnGuardar" text="Guardar" onAction="#onGuardarNota" styleClass="btn"/>
+            <Button fx:id="btnEditar" text="Editar" onAction="#onEditarNota" styleClass="btn" />
+            <Button fx:id="btnEliminar" text="Eliminar" onAction="#onEliminarNota" styleClass="btn"/>
 	
 	    </VBox>
 	</left>

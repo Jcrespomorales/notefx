@@ -9,7 +9,9 @@ public class Note {
 	private LocalDateTime fechaCreacion;
 	private LocalDateTime ultimaModificacion;
 
-	public Note() {
+	public Note(String titulo) {
+		super();
+		this.titulo = titulo;
 
 	}
 
