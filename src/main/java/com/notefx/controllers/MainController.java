@@ -1,7 +1,6 @@
 package com.notefx.controllers;
 
 import com.notefx.models.Note;
-import com.notefx.repository.NoteDAO;
 import com.notefx.services.NoteService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,9 +26,6 @@ public class MainController implements Initializable {
 	private final ObservableList<Note> notes = FXCollections.observableArrayList();
 
 	private static final String TITLE_HINT = "Ingresa un tÍtulo para la Nota";
-
-	// Instancia el acceso a datos para consultar/guardar notas en la base de datos.
-	private NoteDAO noteDAO = new NoteDAO();
 
 	@FXML
 	// Lista visual donde se muestran las notas disponibles.
@@ -66,7 +62,7 @@ public class MainController implements Initializable {
 		// Vincula la lista observable al ListView.
 		// Carga inicial: mantiene una sola lista observable enlazada a la vista.
 		notesList.setItems(notes);
-		notes.setAll(noteDAO.verLista());
+		notes.setAll(noteService.verLista());
 		
 		// Muestra en la lista solo el atributo titulo del objeto
 		notesList.setCellFactory(lv -> new ListCell<>() {
@@ -121,6 +117,25 @@ public class MainController implements Initializable {
 	@FXML
 	// Devuelve el foco al area de edicion tras pulsar Eliminar.
 	private void onEliminarNota(ActionEvent event) {
+		Note seleccionada = notesList.getSelectionModel().getSelectedItem();
+		if (seleccionada == null) {
+			focusNoteInput();
+			return;
+		}
+
+		try {
+			boolean eliminada = noteService.eliminarPorId(seleccionada.getId());
+			if (eliminada) {
+				notes.remove(seleccionada);
+			}
+		} catch (RuntimeException e) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("No se pudo eliminar la nota");
+			alert.setContentText(e.getMessage());
+			alert.showAndWait();
+		}
+
 		focusNoteInput();
 	}
 

@@ -4,54 +4,61 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.WebView?>
 
-<!-- xmlns="http://javafx.com/javafx/17" — declara el espacio de nombres de JavaFX y la versión usada (JavaFX 17). -->
-<!-- xmlns:fx="http://javafx.com/fxml/1" — declara el prefijo "fx:" para las extensiones FXML (p.ej., fx:id, fx:controller). -->
-<!-- : fx:controller="com.notefx.controllers.MainController" — asigna la clase controladora Java que manejará esta UI definida en este FXML. -->
-<BorderPane 
-xmlns="http://javafx.com/javafx/17" 
-xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="com.notefx.controllers.MainController" 
->
-    <top>
-        <ToolBar>
-            <Label text="NoteFX by Jcrespomorales" styleClass="titulo-principal" />
-        </ToolBar>
-    </top>
-	 <left>
-	    <VBox spacing="10" prefWidth="200" styleClass="left-box">
-	
-	        <!-- Lista de notas -->
-	        <ListView fx:id="notesList" VBox.vgrow="ALWAYS" />
-	
-	        <!-- Botones -->
-			<Button fx:id="btnNuevo" text="Nueva" onAction="#onNuevaNota" styleClass="btn"/>
-            <Button fx:id= "btnGuardar" text="Guardar" onAction="#onGuardarNota" styleClass="btn"/>
-            <Button fx:id="btnEditar" text="Editar" onAction="#onEditarNota" styleClass="btn" />
-            <Button fx:id="btnEliminar" text="Eliminar" onAction="#onEliminarNota" styleClass="btn"/>
-	
-	    </VBox>
+<!-- xmlns="http://javafx.com/javafx/17" — declara el espacio de nombres 
+	de JavaFX y la versión usada (JavaFX 17). -->
+<!-- xmlns:fx="http://javafx.com/fxml/1" — declara el prefijo "fx:" para 
+	las extensiones FXML (p.ej., fx:id, fx:controller). -->
+<!-- : fx:controller="com.notefx.controllers.MainController" — asigna la 
+	clase controladora Java que manejará esta UI definida en este FXML. -->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="com.notefx.controllers.MainController">
+	<top>
+		<ToolBar>
+			<Label text="NoteFX by Jcrespomorales"
+				styleClass="titulo-principal" />
+		</ToolBar>
+	</top>
+	<left>
+		<VBox spacing="10" prefWidth="200" styleClass="left-box">
+
+			<!-- LISTA DE NOTAS -->
+			<ListView fx:id="notesList" VBox.vgrow="ALWAYS" />
+
+			<!-- BOTONES -->
+			<Button fx:id="btnNuevo" text="Nueva" onAction="#onNuevaNota"
+				styleClass="btn" />
+			<Button fx:id="btnGuardar" text="Guardar"
+				onAction="#onGuardarNota" styleClass="btn" />
+			<Button fx:id="btnEditar" text="Editar"
+				onAction="#onEditarNota" styleClass="btn" />
+			<Button fx:id="btnEliminar" text="Eliminar"
+				onAction="#onEliminarNota" styleClass="btn" />
+		</VBox>
 	</left>
-	
-	<!--  ÁREA CENTRAL -->
-    <center>
-    	<SplitPane dividerPositions="0.5">
-	    	<VBox styleClass="center-box-left">
-		        <TextArea fx:id="noteInput" styleClass="noteInput" promptText="Escribe tus notas aquí..."  VBox.vgrow="ALWAYS" maxHeight="Infinity"/>
-	    	</VBox>
-	    	
-	    	<VBox styleClass="center-box-right">
-	    		<WebView fx:id="preview" VBox.vgrow="ALWAYS" />
-	    	</VBox>
-    	</SplitPane> 
-    </center>
-    
-    <!-- BARRA DE HERRAMIENTAS DERECHA -->
-    <right>
-    	<VBox styleClass="right-box" prefWidth="50" spacing="5">
-    		<Button styleClass="btn" text="["/>
-    		<Button styleClass="btn" text="]"/>
-    		<Button styleClass="btn" text="[]"/>
-    	
-    	</VBox>
-    </right>
+
+	<!-- ÁREA CENTRAL -->
+	<center>
+		<SplitPane dividerPositions="0.5">
+			<VBox styleClass="center-box-left">
+				<TextArea fx:id="noteInput" styleClass="noteInput"
+					promptText="Escribe tus notas aquí..." VBox.vgrow="ALWAYS"
+					maxHeight="Infinity" />
+			</VBox>
+
+			<VBox styleClass="center-box-right">
+				<WebView fx:id="preview" VBox.vgrow="ALWAYS" />
+			</VBox>
+		</SplitPane>
+	</center>
+
+	<!-- BARRA DE HERRAMIENTAS DERECHA -->
+	<right>
+		<VBox styleClass="right-box" prefWidth="50" spacing="5">
+			<Button styleClass="btn" text="[" />
+			<Button styleClass="btn" text="]" />
+			<Button styleClass="btn" text="[]" />
+
+		</VBox>
+	</right>
 </BorderPane>

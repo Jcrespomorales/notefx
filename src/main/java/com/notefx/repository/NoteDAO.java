@@ -3,8 +3,6 @@ package com.notefx.repository;
 import com.notefx.database.DatabaseConnection;
 import com.notefx.models.Note;
 
-import javafx.collections.ObservableList;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,9 +27,9 @@ public class NoteDAO implements NoteRepository {
 
 	private static final String INSERT_SQL = "INSERT INTO notes (titulo, contenido, fecha_creacion, ultima_modificacion) VALUES (?, ?, ?, ?)";
 
-	private static final String FIND_ALL_TITULOS = """
-			SELECT titulo FROM notes
-			""";
+	private static final String FIND_ALL_NOTES = "SELECT id, titulo FROM notes ORDER BY id DESC";
+
+	private static final String DELETE_SQL = "DELETE FROM notes WHERE id = ?";
 
 	// Inicializa el DAO y garantiza que la tabla exista en la base de datos.
 	public NoteDAO() {
@@ -48,7 +46,6 @@ public class NoteDAO implements NoteRepository {
 			if (conn == null) {
 				throw new IllegalStateException("No se pudo abrir la conexion SQLite");
 			}
-
 			try (PreparedStatement ps = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 				ps.setString(1, titulo);
 				ps.setString(2, "");
@@ -101,9 +98,10 @@ public class NoteDAO implements NoteRepository {
 				throw new IllegalStateException("No se pudo abrir la conexión SQLite");
 			}
 
-			try (PreparedStatement ps = conn.prepareStatement(FIND_ALL_TITULOS); ResultSet rs = ps.executeQuery()) {
+			try (PreparedStatement ps = conn.prepareStatement(FIND_ALL_NOTES); ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Note note = new Note(null);
+					note.setId(rs.getLong("id"));
 					note.setTitulo(rs.getString("titulo"));
 					notas.add(note);
 				}
@@ -117,8 +115,29 @@ public class NoteDAO implements NoteRepository {
 	}
 
 	@Override
-	public Optional<Note> obtenerPorTitulo(String titulo) {
+	public Optional<Note> obtenerPorTitulo(Note note) {
 		// TODO Esbozo de método generado automáticamente
 		return Optional.empty();
 	}
+
+	
+	// Eliminar Nota
+	@Override
+	public boolean eliminarPorId(Long id) {
+		if (id == null) {
+			return false;
+		}
+		try (Connection conn = DatabaseConnection.connect()) {
+			if (conn == null) {
+				throw new IllegalStateException("No se pudo abrir la conexion SQLite");
+			}
+			try (PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+				ps.setLong(1, id);
+				return ps.executeUpdate() > 0;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Error al eliminar la nota", e);
+		}
+	}
+
 }

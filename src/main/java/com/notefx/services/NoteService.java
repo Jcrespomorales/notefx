@@ -4,6 +4,8 @@ import com.notefx.models.Note;
 import com.notefx.repository.NoteRepository;
 import com.notefx.repository.NoteDAO;
 
+import java.util.List;
+
 public class NoteService {
 
     // Dependencia para persistir y recuperar notas.
@@ -25,6 +27,19 @@ public class NoteService {
             throw new IllegalArgumentException("El titulo no puede estar vacio");
         }
         return repository.crearNote(titulo.trim());
+    }
+
+    public List<Note> verLista() {
+        return repository.verLista();
+    }
+
+    
+    
+    public boolean eliminarPorId(Long id) {
+        if (id == null) {
+            return false;
+        }
+        return repository.eliminarPorId(id);
     }
 
 }
