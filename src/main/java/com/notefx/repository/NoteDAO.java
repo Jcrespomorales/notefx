@@ -27,17 +27,23 @@ public class NoteDAO implements NoteRepository {
 
 	private static final String INSERT_SQL = "INSERT INTO notes (titulo, contenido, fecha_creacion, ultima_modificacion) VALUES (?, ?, ?, ?)";
 
-	private static final String FIND_ALL_NOTES = "SELECT id, titulo FROM notes ORDER BY id DESC";
+	private static final String FIND_ALL_NOTES = "SELECT id, titulo, contenido FROM notes ORDER BY id DESC";
+	
+	private static final String FIND_BY_ID_SQL = "SELECT id, titulo, contenido, fecha_creacion, ultima_modificacion FROM notes WHERE id = ?";
 
 	private static final String DELETE_SQL = "DELETE FROM notes WHERE id = ?";
+	
+	private static final String UPDATE_CONTENIDO_SQL = "UPDATE notes SET contenido = ?, ultima_modificacion = ? WHERE id = ?";
 
 	// Inicializa el DAO y garantiza que la tabla exista en la base de datos.
 	public NoteDAO() {
 		ensureSchema();
 	}
 
-	// Crea una nota nueva con titulo, contenido vacio y fechas de
-	// creacion/modificacion actuales.
+	// ===== CREAR NOTA ======
+	// ====================
+	
+	// Crea una nota nueva con titulo, contenido vacio y fechas de creacion/modificacion actuales.
 	@Override
 	public Note crearNote(String titulo) {
 		LocalDateTime now = LocalDateTime.now();
@@ -86,6 +92,74 @@ public class NoteDAO implements NoteRepository {
 		return -1L;
 	}
 
+	// ===== EDITAR NOTA =====
+	// ====================
+
+	@Override
+	public Note editarNote(Long id, String contenido) {
+		if (id == null) {
+			throw new IllegalArgumentException("El id de la nota no puede ser null");
+		}
+		LocalDateTime now = LocalDateTime.now();
+		String contenidoSeguro = contenido == null ? "" : contenido;
+
+		try (Connection conn = DatabaseConnection.connect()) {
+			if (conn == null) {
+				throw new IllegalStateException("No se pudo abrir la conexion SQLite");
+			}
+			try (PreparedStatement updatePs = conn.prepareStatement(UPDATE_CONTENIDO_SQL)) {
+				updatePs.setString(1, contenidoSeguro);
+				updatePs.setString(2, now.toString());
+				updatePs.setLong(3, id);
+
+				int filasAfectadas = updatePs.executeUpdate();
+				if (filasAfectadas == 0) {
+					throw new IllegalArgumentException("No existe una nota con id: " + id);
+				}
+			}
+
+			try (PreparedStatement findPs = conn.prepareStatement(FIND_BY_ID_SQL)) {
+				findPs.setLong(1, id);
+				try (ResultSet rs = findPs.executeQuery()) {
+					if (rs.next()) {
+						return new Note(
+							rs.getLong("id"),
+							rs.getString("titulo"),
+							rs.getString("contenido"),
+							LocalDateTime.parse(rs.getString("fecha_creacion")),
+							LocalDateTime.parse(rs.getString("ultima_modificacion"))
+						);
+					}
+				}
+			}
+
+			throw new IllegalStateException("La nota fue editada, pero no se pudo recuperar desde la base de datos");
+		} catch (SQLException e) {
+			throw new RuntimeException("Error al editar el contenido de la nota", e);
+		}
+	}
+
+	// ==== ELIMINAR NOTA ====
+	// ====================
+
+	@Override
+	public boolean eliminarPorId(Long id) {
+		if (id == null) {
+			return false;
+		}
+		try (Connection conn = DatabaseConnection.connect()) {
+			if (conn == null) {
+				throw new IllegalStateException("No se pudo abrir la conexion SQLite");
+			}
+			try (PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+				ps.setLong(1, id);
+				return ps.executeUpdate() > 0;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException("Error al eliminar la nota", e);
+		}
+	}
+
 	// ==== LISTA DE NOTAS ====
 	// ====================
 
@@ -103,6 +177,7 @@ public class NoteDAO implements NoteRepository {
 					Note note = new Note(null);
 					note.setId(rs.getLong("id"));
 					note.setTitulo(rs.getString("titulo"));
+					note.setContenido(rs.getString("contenido"));
 					notas.add(note);
 				}
 			}
@@ -118,26 +193,6 @@ public class NoteDAO implements NoteRepository {
 	public Optional<Note> obtenerPorTitulo(Note note) {
 		// TODO Esbozo de método generado automáticamente
 		return Optional.empty();
-	}
-
-	
-	// Eliminar Nota
-	@Override
-	public boolean eliminarPorId(Long id) {
-		if (id == null) {
-			return false;
-		}
-		try (Connection conn = DatabaseConnection.connect()) {
-			if (conn == null) {
-				throw new IllegalStateException("No se pudo abrir la conexion SQLite");
-			}
-			try (PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
-				ps.setLong(1, id);
-				return ps.executeUpdate() > 0;
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException("Error al eliminar la nota", e);
-		}
 	}
 
 }

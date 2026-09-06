@@ -11,6 +11,9 @@ public interface NoteRepository {
 
     Note crearNote(String titulo);
     
+    Note editarNote(Long id, String contenido);
+    
+    boolean eliminarPorId(Long id);
 
 
 // === Lista de Notas ===
@@ -19,7 +22,6 @@ public interface NoteRepository {
     
     Optional<Note>obtenerPorTitulo(Note note);
 
-    boolean eliminarPorId(Long id);
 
 
 }

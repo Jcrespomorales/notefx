@@ -28,10 +28,10 @@
 			<!-- BOTONES -->
 			<Button fx:id="btnNuevo" text="Nueva" onAction="#onNuevaNota"
 				styleClass="btn" />
+			<TextField fx:id="titleInput" promptText="Titulo de la nota"
+				onAction="#onNuevaNota" />
 			<Button fx:id="btnGuardar" text="Guardar"
 				onAction="#onGuardarNota" styleClass="btn" />
-			<Button fx:id="btnEditar" text="Editar"
-				onAction="#onEditarNota" styleClass="btn" />
 			<Button fx:id="btnEliminar" text="Eliminar"
 				onAction="#onEliminarNota" styleClass="btn" />
 		</VBox>

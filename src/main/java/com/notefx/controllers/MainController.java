@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
 
+import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,8 +26,6 @@ public class MainController implements Initializable {
 	// Lista observable enlazada a la vista de notas.
 	private final ObservableList<Note> notes = FXCollections.observableArrayList();
 
-	private static final String TITLE_HINT = "Ingresa un tÍtulo para la Nota";
-
 	@FXML
 	// Lista visual donde se muestran las notas disponibles.
 	private ListView<Note> notesList;
@@ -34,6 +33,10 @@ public class MainController implements Initializable {
 	@FXML
 	// Area de texto para editar el contenido de la nota seleccionada.
 	private TextArea noteInput;
+	
+	@FXML
+	// Área de texto para nombrar la nota creada
+	private TextField titleInput;
 
 	@FXML
 	// Vista previa para renderizar contenido enriquecido de la nota.
@@ -44,26 +47,11 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		// Si esta visible el mensaje guia, se limpia al escribir el primer caracter.
-		noteInput.addEventFilter(KeyEvent.KEY_TYPED, event -> {
-			if (TITLE_HINT.equals(noteInput.getText()) && !event.getCharacter().isEmpty()) {
-				noteInput.clear();
-			}
-		});
-
-		// Enter confirma el titulo y evita insertar una nueva linea en el TextArea.
-		noteInput.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				event.consume();
-				onNuevaNota(new ActionEvent(noteInput, noteInput));
-			}
-		});
-
 		// Vincula la lista observable al ListView.
 		// Carga inicial: mantiene una sola lista observable enlazada a la vista.
 		notesList.setItems(notes);
 		notes.setAll(noteService.verLista());
-		
+
 		// Muestra en la lista solo el atributo titulo del objeto
 		notesList.setCellFactory(lv -> new ListCell<>() {
 			@Override
@@ -72,17 +60,23 @@ public class MainController implements Initializable {
 				setText(empty || item == null ? null : item.getTitulo());
 			}
 		});
+
+		// Al seleccionar una nota, su contenido pasa al editor.
+		notesList.getSelectionModel().selectedItemProperty().addListener((obs, oldNote, newNote) -> {
+			noteInput.setText(newNote == null || newNote.getContenido() == null ? "" : newNote.getContenido());
+		});
 	}
 
+	
+	// ===== CREAR NOTE =======
+	// =====================
+	
 	@FXML
-	// Crea una nueva nota con el titulo ingresado y la agrega al inicio de la
-	// lista.
 	private void onNuevaNota(ActionEvent event) {
-		String titulo = noteInput.getText();
+		String titulo = titleInput.getText();
 
-		if (titulo != null && titulo.equals("")) {
-			noteInput.setText(TITLE_HINT);
-			focusNoteInput();
+		if (titulo == null || titulo.isBlank()) {
+			focusTitleInput();
 			return;
 		}
 
@@ -90,7 +84,7 @@ public class MainController implements Initializable {
 			Note nueva = noteService.crearNote(titulo);
 			notes.add(0, nueva);
 			notesList.getSelectionModel().select(nueva);
-			noteInput.clear();
+			titleInput.clear();
 			focusNoteInput();
 		} catch (RuntimeException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -102,31 +96,50 @@ public class MainController implements Initializable {
 		}
 	}
 
+	// ===== EDITAR NOTE =====
+	// ====================
+	// Al pulsar el botón guardar se edita la base de datos
+	
 	@FXML
-	// Devuelve el foco al area de edicion tras pulsar Guardar.
+	// Guarda el contenido actual de la nota seleccionada en la base de datos.
 	private void onGuardarNota(ActionEvent event) {
-		focusNoteInput();
-	}
+			Note seleccionada = notesList.getSelectionModel().getSelectedItem();
+			if (seleccionada == null) {
+				focusNoteInput();
+				return;
+			}
+			try {
+				Note actualizada = noteService.editarContenido(seleccionada.getId(), noteInput.getText());
+				seleccionada.setContenido(actualizada.getContenido());
+			} catch (RuntimeException e) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("No se pudo guardar la nota");
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+			}
+			focusNoteInput();
+		}
+	
+	
+	
 
+	
+	// ==== ELIMINAR NOTE ====
+	// ====================
+	
 	@FXML
-	// Devuelve el foco al area de edicion tras pulsar Editar.
-	private void onEditarNota(ActionEvent event) {
-		focusNoteInput();
-	}
-
-	@FXML
-	// Devuelve el foco al area de edicion tras pulsar Eliminar.
 	private void onEliminarNota(ActionEvent event) {
 		Note seleccionada = notesList.getSelectionModel().getSelectedItem();
 		if (seleccionada == null) {
 			focusNoteInput();
 			return;
 		}
-
 		try {
 			boolean eliminada = noteService.eliminarPorId(seleccionada.getId());
 			if (eliminada) {
 				notes.remove(seleccionada);
+				noteInput.clear();
 			}
 		} catch (RuntimeException e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -146,4 +159,17 @@ public class MainController implements Initializable {
 			noteInput.positionCaret(noteInput.getText().length());
 		}
 	}
+	
+	// Centraliza el movimiento del cursor al TextFiel del titulo.
+	private void focusTitleInput() {
+		if(titleInput != null) {
+			titleInput.requestFocus();
+			titleInput.positionCaret(titleInput.getText().length());
+		}
+	}
+
+
+
+
+
 }
