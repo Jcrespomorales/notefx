@@ -39,14 +39,14 @@
 
 	<!-- ÁREA CENTRAL -->
 	<center>
-		<SplitPane dividerPositions="0.5">
-			<VBox styleClass="center-box-left">
+		<SplitPane fx:id="centerSplit" dividerPositions="0.5">
+			<VBox fx:id="editorBox" styleClass="center-box-left">
 				<TextArea fx:id="noteInput" styleClass="noteInput"
 					promptText="Escribe tus notas aquí..." VBox.vgrow="ALWAYS"
 					maxHeight="Infinity" />
 			</VBox>
 
-			<VBox styleClass="center-box-right">
+			<VBox fx:id="previewBox" styleClass="center-box-right">
 				<WebView fx:id="preview" VBox.vgrow="ALWAYS" />
 			</VBox>
 		</SplitPane>
@@ -55,9 +55,21 @@
 	<!-- BARRA DE HERRAMIENTAS DERECHA -->
 	<right>
 		<VBox styleClass="right-box" prefWidth="50" spacing="5">
-			<Button styleClass="btn" text="[" />
-			<Button styleClass="btn" text="]" />
-			<Button styleClass="btn" text="[]" />
+			<Button fx:id="btnEditorOnly" styleClass="btn" text="[|" onAction="#onEditorOnly">
+				<tooltip>
+					<Tooltip text="Mostrar solo editor" />
+				</tooltip>
+			</Button>
+			<Button fx:id="btnPreviewOnly" styleClass="btn" text="|]" onAction="#onPreviewOnly">
+				<tooltip>
+					<Tooltip text="Mostrar solo vista previa" />
+				</tooltip>
+			</Button>
+			<Button fx:id="btnSplitView" styleClass="btn" text="[]" onAction="#onSplitView">
+				<tooltip>
+					<Tooltip text="Mostrar editor y vista previa" />
+				</tooltip>
+			</Button>
 
 		</VBox>
 	</right>

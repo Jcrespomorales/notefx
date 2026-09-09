@@ -10,11 +10,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.SplitPane;
 import javafx.scene.web.WebView;
 
 import javafx.scene.control.TextField;
@@ -22,6 +25,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+	private enum CenterMode {
+		EDITOR_ONLY, PREVIEW_ONLY, SPLIT
+	}
 
 	// Servicio de aplicacion para crear y gestionar notas.
 	private final NoteService noteService = new NoteService();
@@ -43,6 +49,24 @@ public class MainController implements Initializable {
 	@FXML
 	// Vista previa para renderizar contenido enriquecido de la nota.
 	private WebView preview;
+
+	@FXML
+	private SplitPane centerSplit;
+
+	@FXML
+	private VBox editorBox;
+
+	@FXML
+	private VBox previewBox;
+
+	@FXML
+	private Button btnEditorOnly;
+
+	@FXML
+	private Button btnPreviewOnly;
+
+	@FXML
+	private Button btnSplitView;
 
 	// ==== INICIALIZACION DEL CONTROLADOR ====
 	// ================================
@@ -72,6 +96,44 @@ public class MainController implements Initializable {
 		noteInput.textProperty().addListener((obs, oldText, newText) -> preview.getEngine()
 				.loadContent(MarkdownService.toHtml(newText), "text/html"));
 		preview.getEngine().loadContent(MarkdownService.toHtml(noteInput.getText()), "text/html");
+
+		applyCenterMode(CenterMode.SPLIT);
+	}
+
+	@FXML
+	private void onEditorOnly(ActionEvent event) {
+		applyCenterMode(CenterMode.EDITOR_ONLY);
+	}
+
+	@FXML
+	private void onPreviewOnly(ActionEvent event) {
+		applyCenterMode(CenterMode.PREVIEW_ONLY);
+	}
+
+	@FXML
+	private void onSplitView(ActionEvent event) {
+		applyCenterMode(CenterMode.SPLIT);
+	}
+
+	// Cambia el layout central y marca visualmente el modo activo.
+	private void applyCenterMode(CenterMode mode) {
+		switch (mode) {
+		case EDITOR_ONLY -> centerSplit.getItems().setAll(editorBox);
+		case PREVIEW_ONLY -> centerSplit.getItems().setAll(previewBox);
+		case SPLIT -> {
+			centerSplit.getItems().setAll(editorBox, previewBox);
+			centerSplit.setDividerPositions(0.5);
+		}
+		}
+		markActiveButton(mode);
+	}
+
+	// Estilo inline para no depender de CSS adicional.
+	private void markActiveButton(CenterMode mode) {
+		String active = "-fx-background-color: -fx-accent; -fx-text-fill: white;";
+		btnEditorOnly.setStyle(mode == CenterMode.EDITOR_ONLY ? active : "");
+		btnPreviewOnly.setStyle(mode == CenterMode.PREVIEW_ONLY ? active : "");
+		btnSplitView.setStyle(mode == CenterMode.SPLIT ? active : "");
 	}
 
 	// ===== CREAR NOTE =======
