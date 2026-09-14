@@ -17,10 +17,10 @@
 	fx:controller="com.notefx.controllers.MainController">
 	<top>
 		<ToolBar styleClass="toolbar">
-			<ImageView fitHeight="32" fitWidth="32"
+			<ImageView fitHeight="42" fitWidth="42"
 				preserveRatio="true">
 				<image>
-					<Image url="@../images/jcrespomorales-logo2" />
+					<Image url="@../images/Logo_JACM.png" />
 				</image>
 			</ImageView>
 			<Label text="NoteFX by Jcrespomorales"
