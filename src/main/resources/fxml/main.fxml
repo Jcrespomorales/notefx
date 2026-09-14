@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.web.WebView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <!-- xmlns="http://javafx.com/javafx/17" — declara el espacio de nombres 
 	de JavaFX y la versión usada (JavaFX 17). -->
@@ -14,7 +16,13 @@
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="com.notefx.controllers.MainController">
 	<top>
-		<ToolBar>
+		<ToolBar styleClass="toolbar">
+			<ImageView fitHeight="32" fitWidth="32"
+				preserveRatio="true">
+				<image>
+					<Image url="@../images/jcrespomorales-logo2" />
+				</image>
+			</ImageView>
 			<Label text="NoteFX by Jcrespomorales"
 				styleClass="titulo-principal" />
 		</ToolBar>
@@ -28,8 +36,8 @@
 			<!-- BOTONES -->
 			<Button fx:id="btnNuevo" text="Nueva" onAction="#onNuevaNota"
 				styleClass="btn" />
-			<TextField fx:id="titleInput" promptText="Titulo de la nota"
-				onAction="#onNuevaNota" />
+			<TextField fx:id="titleInput"
+				promptText="Titulo de la nota" onAction="#onNuevaNota" />
 			<Button fx:id="btnGuardar" text="Guardar"
 				onAction="#onGuardarNota" styleClass="btn" />
 			<Button fx:id="btnEliminar" text="Eliminar"
@@ -55,22 +63,24 @@
 	<!-- BARRA DE HERRAMIENTAS DERECHA -->
 	<right>
 		<VBox styleClass="right-box" prefWidth="50" spacing="5">
-			<Button fx:id="btnEditorOnly" styleClass="btn" text="[|" onAction="#onEditorOnly">
+			<Button fx:id="btnEditorOnly" styleClass="btn" text="[|"
+				onAction="#onEditorOnly">
 				<tooltip>
 					<Tooltip text="Mostrar solo editor" />
 				</tooltip>
 			</Button>
-			<Button fx:id="btnPreviewOnly" styleClass="btn" text="|]" onAction="#onPreviewOnly">
+			<Button fx:id="btnPreviewOnly" styleClass="btn" text="|]"
+				onAction="#onPreviewOnly">
 				<tooltip>
 					<Tooltip text="Mostrar solo vista previa" />
 				</tooltip>
 			</Button>
-			<Button fx:id="btnSplitView" styleClass="btn" text="[]" onAction="#onSplitView">
+			<Button fx:id="btnSplitView" styleClass="btn" text="[]"
+				onAction="#onSplitView">
 				<tooltip>
 					<Tooltip text="Mostrar editor y vista previa" />
 				</tooltip>
 			</Button>
-
 		</VBox>
 	</right>
 </BorderPane>

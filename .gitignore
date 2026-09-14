@@ -14,3 +14,7 @@ target/
 
 #DataBase
 note.db
+
+#Agentes AI
+**.github
+**AGENTS.md

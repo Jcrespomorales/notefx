@@ -25,9 +25,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-	private enum CenterMode {
-		EDITOR_ONLY, PREVIEW_ONLY, SPLIT
-	}
 
 	// Servicio de aplicacion para crear y gestionar notas.
 	private final NoteService noteService = new NoteService();
@@ -100,6 +97,11 @@ public class MainController implements Initializable {
 		applyCenterMode(CenterMode.SPLIT);
 	}
 
+	// Modos disponibles para mostrar editor, vista previa o ambos paneles.
+	private enum CenterMode {
+		EDITOR_ONLY, PREVIEW_ONLY, SPLIT
+	}
+
 	@FXML
 	private void onEditorOnly(ActionEvent event) {
 		applyCenterMode(CenterMode.EDITOR_ONLY);
@@ -128,12 +130,18 @@ public class MainController implements Initializable {
 		markActiveButton(mode);
 	}
 
-	// Estilo inline para no depender de CSS adicional.
+	// Aplica una clase CSS al modo activo y la quita de los demas botones.
 	private void markActiveButton(CenterMode mode) {
-		String active = "-fx-background-color: -fx-accent; -fx-text-fill: white;";
-		btnEditorOnly.setStyle(mode == CenterMode.EDITOR_ONLY ? active : "");
-		btnPreviewOnly.setStyle(mode == CenterMode.PREVIEW_ONLY ? active : "");
-		btnSplitView.setStyle(mode == CenterMode.SPLIT ? active : "");
+		String activeClass = "view-mode-active";
+		btnEditorOnly.getStyleClass().remove(activeClass);
+		btnPreviewOnly.getStyleClass().remove(activeClass);
+		btnSplitView.getStyleClass().remove(activeClass);
+
+		switch (mode) {
+		case EDITOR_ONLY -> btnEditorOnly.getStyleClass().add(activeClass);
+		case PREVIEW_ONLY -> btnPreviewOnly.getStyleClass().add(activeClass);
+		case SPLIT -> btnSplitView.getStyleClass().add(activeClass);
+		}
 	}
 
 	// ===== CREAR NOTE =======
